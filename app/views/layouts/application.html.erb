@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Portal</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application.js' %>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  </head>
+
+  <body>
+  <% flash.each do |key, value| %>
+            <div class="alert alert-<%= key %>">
+              <%= value %>
+  <% end%>
+  <div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <%= render "layouts/navigation" %>
+      <%= yield %>
+    </div>
+  </div>
+</div>
+    
+  </body>
+</html>
+    

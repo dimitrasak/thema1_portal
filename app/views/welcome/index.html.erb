@@ -1,0 +1,53 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="text-center">
+    <h1 style="color: #3498db;">Welcome to 2P!</h1>
+    <h3 style="color: #e74c3c;">2P stands for Portal Project..</h3>
+    <br>
+    <h4 style="color: #27ae60;">This is an application for connecting with people with the same interests!</h4>
+    <h4 style="color: #f39c12;">Join the team by signing up to our platform, get access to all the fantastic features! :)</h4>
+    <h3 style="color: #8e44ad;">Click on the service that you'd like to use!</h3>
+    <h1 style="color: #e67e22;">See you on board!</h1>
+    <%= link_to 'Go to Posts', posts_path, class: 'btn btn-primary rounded-pill', id: 'posts-link', data: { signed_in: user_signed_in? } %>
+    <%= link_to 'Go to Chats', chats_path, class: 'btn btn-primary rounded-pill', id: 'chats-link', data: { signed_in: user_signed_in? } %>
+
+  </div>
+</div>
+
+
+<script>
+const postsLink = document.getElementById('posts-link');
+const chatsLink = document.getElementById('chats-link');
+
+const checkSignInAndRedirect = function(event, link) {
+  const isUserSignedIn = link.dataset.signedIn === 'true';
+
+  if (!isUserSignedIn) {
+    alert('You need to sign up/in first!');
+    event.preventDefault(); // Prevent the default behavior of clicking the button (navigating to the link)
+    window.location.href = '/login'; // Replace with your actual sign-in path.
+  }
+};
+
+postsLink.addEventListener('click', function(event) {
+  const isPostsLinkSignedIn = postsLink.dataset.signedIn === 'true';
+
+  if (!isPostsLinkSignedIn) {
+    alert('You need to sign up/in first to access Posts!'); // You can customize the message here
+    event.preventDefault();
+    window.location.href = '/login';
+  }
+});
+
+chatsLink.addEventListener('click', function(event) {
+  const isChatsLinkSignedIn = chatsLink.dataset.signedIn === 'true';
+
+  if (!isChatsLinkSignedIn) {
+    alert('You need to sign up/in first to access Chats!'); // You can customize the message here
+    event.preventDefault();
+    window.location.href = '/login';
+  }
+});
+
+</script>
+
+

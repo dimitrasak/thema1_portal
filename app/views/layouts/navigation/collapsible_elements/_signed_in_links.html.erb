@@ -1,0 +1,16 @@
+<ul class="nav navbar-nav">
+<ul class="pc-menu" style="font-size: 20px;">
+<span id="user-name" style="color: white; margin-right: 10px;" ><%= current_user.email %></span>
+<%= link_to 'Edit Profile', edit_user_registration_path %>
+<%= link_to 'Log out', destroy_user_session_path, method: :delete %>
+</ul>
+
+<ul class="mobile-menu">
+<span id="user-name" style="color: white;"><%= current_user.name %></span>
+<%= link_to 'Edit Profile', edit_user_registration_path %>
+<%= link_to 'Log out', destroy_user_session_path, method: :delete %>  
+</ul>
+</ul>
+
+
+

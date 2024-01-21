@@ -1,0 +1,160 @@
+<script>
+  $(document).ready(function() {
+    console.log("doc ready");
+    var currentUser = '';
+    var welcomePage = $('.welcome-page');
+    var postPage = $('.post-page');
+    var newUserForm = $('#new-user-form');
+    var submitUsernameButton = $('#submit-username');
+
+    function submitUsername() {
+      currentUser = newUserForm.val();
+      newUserForm.val('');
+      welcomePage.addClass('collapse');
+      postPage.removeClass('collapse');
+      var greeting = "Welcome @" + currentUser;
+      $('.current-user').html(greeting);
+      $('#username').val(currentUser);
+    }
+
+    newUserForm.on('keyup', function(event) {
+      if (event.keyCode === 13 && !event.shiftKey) {
+        submitUsername();
+      }
+    });
+
+    submitUsernameButton.on('click', function(event) {
+      event.preventDefault(); // Prevent the form from submitting
+      submitUsername();
+    });
+  });
+
+  //submit new post => update the view
+  $(document).ready(function() {
+
+    // Function to handle asynchronous form submission
+    function submitPost() {
+      var postForm = $('#post-form');
+      var formData = postForm.serialize();
+
+      $.ajax({
+        url: postForm.attr('action'),
+        type: 'POST',
+        data: formData,
+        success: function(data) {
+          // Clear the textarea after successful submission
+          postForm.find('textarea').val('');
+          // Update the feed with the new post
+          updateFeed(data);
+          addLike(data.id);
+        },
+        error: function(error) {
+          console.error('Error submitting post:', error);
+        }
+      });
+    }
+
+    // Bind the submitPost function to the form submission
+    $('#post-form').on('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+      submitPost();
+    });
+  }); 
+
+  
+
+  // Function for adding new posts to the feed
+function updateFeed(post) {
+  // Convert the post's created_at date to a formatted string
+  const postTime = new Date(post.created_at.replace(' ', 'T')).toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true
+  });
+
+  // Append the new post to the .posts container
+  const postWrapper = `
+    <div class="post-wrapper col-12 mb-2 p-0">
+      <div class="card">
+        <div class="card-header">@${post.username}<small class="float-right mt-1">at ${postTime}</small></div>
+        <div class="card-body">
+          <p class="card-text">${post.post}</p>
+          <a class="far fa-thumbs-up add-like" data-remote="true" rel="nofollow" data-method="post" href="/posts/${post.id}/add_like"></a>
+          <span class="ml-2" data-post="${post.id}">${post.likes.length > 0 ? post.likes[0].like_count : 0}}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const newPost = $(postWrapper);
+  $('.posts').prepend(newPost);
+
+  const likeButton = newPost.find('.add-like');
+  likeButton.on('click', function(event) {
+    event.preventDefault();
+    addLike(post.id);
+  });
+
+  }
+
+  function addLike(postId) {
+  $.ajax({
+    url: `/posts/${postId}/add_like`,
+    type: 'POST',
+    success: function(data) {
+      // Update the like count in the view without reloading the page
+      const likeCountSpan = $(`.ml-2[data-post="${postId}"]`);
+      likeCountSpan.text(data.likes);
+    },
+    error: function(error) {
+      console.error('Error adding like:', error);
+    }
+  });
+}
+
+
+</script>
+
+<div class="container-fluid">
+  <div class="container">
+    <div class="container bg-light p-3 col-8 col-lg-6 welcome-page">
+      <h5 class="text-center">Enter your username</h5>
+      <input type="text" id="new-user-form" class="form-control my-5" required />
+      <button id="submit-username" class="btn btn-primary">Submit</button>
+    </div>
+    <div class="container bg-light p-3 col-8 col-lg-6 post-page collapse">
+      <div class="post-form-wrapper">
+        <p class="current-user"></p>
+        <%= form_with(model: @post, scope: :post, format: :json, id: 'post-form', remote: true) do |form| %>
+          <div class="field">
+            <%= form.text_area :post, id: :post, class: "form-control post-textarea", required: true %>
+            <%= form.hidden_field :username, id: :username %>
+          </div>
+          <div class="actions text-right">
+            <%= form.submit 'Submit post', class: "btn btn-success btn-sm mt-1" %>
+          </div>
+        <% end %>
+      </div>
+      <div class="posts mt-5">
+        <% @posts.each do |post| %>
+          <% if post.is_a?(Post) %>
+            <div class="post-wrapper col-12 mb-2 p-0">
+              <div class="card">
+                <div class="card-header">
+                  @<%= post.username %>
+                  <small class="float-right mt-1"><%= post.created_at.strftime("at %I:%M%p") %></small>
+                </div>
+                <div class="card-body">
+                  <p class="card-text"><%= post.post %></p>
+                  <a href="#" class="far fa-thumbs-up add-like"></a>
+                  <span class="ml-2" data-post="${post.id}"><%= post.likes[0].like_count %></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
