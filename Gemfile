@@ -63,6 +63,10 @@ gem "dotenv-rails"
 gem 'omniauth-google-oauth2'
 gem "omniauth-rails_csrf_protection"
 
+# adding cloudinary to gemfile
+gem 'cloudinary'
+
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 

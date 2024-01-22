@@ -1,0 +1,2 @@
+class PostsFeed < ApplicationRecord
+end

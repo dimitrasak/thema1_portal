@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'posts_feed/create'
+  get 'posts_feed/store'
+  get 'posts_feed/index'
+  post 'posts_feed/store'
   get 'chats/create'
   get 'chats/new'
   get 'chats/show'

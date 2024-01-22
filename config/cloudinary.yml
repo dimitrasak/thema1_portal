@@ -1,0 +1,11 @@
+development: 
+  cloud_name: "dhgdirwff"
+  api_key: "459884256813737"
+  api_secret: "WTdcolQ2iigA1X8gZcXJuug04PA"
+  secure: true
+
+production:
+  cloud_name: "dhgdirwff"
+  api_key: "459884256813737"
+  api_secret: "WTdcolQ2iigA1X8gZcXJuug04PA"
+  secure: true

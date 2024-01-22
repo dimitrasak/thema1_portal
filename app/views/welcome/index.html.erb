@@ -7,7 +7,7 @@
     <h4 style="color: #f39c12;">Join the team by signing up to our platform, get access to all the fantastic features! :)</h4>
     <h3 style="color: #8e44ad;">Click on the service that you'd like to use!</h3>
     <h1 style="color: #e67e22;">See you on board!</h1>
-    <%= link_to 'Go to Posts', posts_path, class: 'btn btn-primary rounded-pill', id: 'posts-link', data: { signed_in: user_signed_in? } %>
+    <%= link_to 'Go to Posts', posts_feed_index_path, class: 'btn btn-primary rounded-pill', id: 'posts-link', data: { signed_in: user_signed_in? } %>
     <%= link_to 'Go to Chats', chats_path, class: 'btn btn-primary rounded-pill', id: 'chats-link', data: { signed_in: user_signed_in? } %>
 
   </div>
