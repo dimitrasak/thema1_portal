@@ -1,0 +1,63 @@
+<style>
+.msg-form {
+    position: fixed;
+    bottom: 0;
+    width: 90%
+  }
+
+  .col-md-10 {
+    height: 100vh;
+    overflow: scroll;
+  }
+
+  .msg-content {
+    width: 80%;
+    margin-right: 5px;
+  }
+
+  .message-box {
+  width: fit-content;
+  max-width: 40%;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: #555555 ;
+  padding: 10px
+}
+</style>
+
+<body class="full-height">
+    <div class="container-fluid d-flex flex-row h-100">
+      <!-- Left column with white background -->
+      <div class="col-md-2">
+        <h5> Hi <%= @current_user.name %> </h5>
+        <h4> Users </h4>
+        <div>
+            <%= turbo_stream_from "users" %>
+            <div id="users">
+              <%= render @users %>
+            </div>
+        </div>
+        <h4> Rooms </h4>
+        <%= render partial: "rooms/new_room_form" %>
+        <div>
+          <%= turbo_stream_from "rooms" %>
+          <div id="rooms">
+            <%= render @rooms %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column with grey background -->
+      <div class="col-md-10" style="background-color: grey; color: white;">
+        <% if @single_room %>
+          <h4 class="text-center"> <%= @user&.name || @single_room.name %> </h4>          
+          <div id="messages">
+            <%= render partial: 'messages/message', collection: @single_room.messages %>
+          </div>
+          <%= render partial: 'layouts/new_message_form' %>
+        <% end %>
+      </div>
+      </div>
+    </div>
+  </body>

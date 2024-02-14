@@ -1,0 +1,26 @@
+<style>
+.msg-form {
+    position: fixed;
+    bottom: 0;
+    width: 90%
+  }
+
+  .col-md-10 {
+    height: 100vh;
+    overflow: scroll;
+  }
+
+  .msg-content {
+    width: 80%;
+    margin-right: 5px;
+  }
+</style>
+
+
+<div class="form-group msg-form">
+  <%= form_with(model: [@single_room ,@message], remote: true, class: "d-flex" ) do |f| %>
+    <%= f.text_field :content, id: 'chat-text', class: "form-control msg-content", autocomplete: 'off' %>
+    <%= f.submit data: { disable_with: false }, class: "btn btn-primary" %>
+  <% end %>
+</div>
+

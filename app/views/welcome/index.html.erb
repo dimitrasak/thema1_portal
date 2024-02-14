@@ -9,7 +9,25 @@
     <h1 style="color: #e67e22;">See you on board!</h1>
     <%= link_to 'Go to Posts', posts_feed_index_path, class: 'btn btn-primary rounded-pill', id: 'posts-link', data: { signed_in: user_signed_in? } %>
     <%= link_to 'Go to Chats', chats_path, class: 'btn btn-primary rounded-pill', id: 'chats-link', data: { signed_in: user_signed_in? } %>
-
+    <%= link_to "Contact List", contacts_path, class: 'btn btn-primary rounded-pill', id: 'contacts-link', data: { signed_in: user_signed_in? } %>
+    <div class="flex justify-between">
+  <% if user_signed_in? %>
+    <div>
+      Signed in as <%= current_user.email %>. <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-blue-500" %>
+      <%= link_to "All messages", rooms_path, class: "text-blue-500" %>
+    </div>
+    <!--<%= turbo_frame_tag "notifications", src: notifications_path %> -->
+    <% if @notifications.present? %>
+    <% @notifications.each do |notification| %>
+      <%= render partial: 'notifications/notification', locals: { notification: notification } %>
+    <% end %>
+  <% else %>
+    <p>No notifications</p>
+  <% end %>
+  <% else %>
+    <%= link_to "Sign in", login_path , class: "text-blue-500" %>
+  <% end %>
+</div>
   </div>
 </div>
 
@@ -17,14 +35,15 @@
 <script>
 const postsLink = document.getElementById('posts-link');
 const chatsLink = document.getElementById('chats-link');
+const contactsLink = document.getElementById('contacts-link');
 
 const checkSignInAndRedirect = function(event, link) {
   const isUserSignedIn = link.dataset.signedIn === 'true';
 
   if (!isUserSignedIn) {
     alert('You need to sign up/in first!');
-    event.preventDefault(); // Prevent the default behavior of clicking the button (navigating to the link)
-    window.location.href = '/login'; // Replace with your actual sign-in path.
+    event.preventDefault(); 
+    window.location.href = '/login'; //  sign-in path.
   }
 };
 
@@ -32,7 +51,7 @@ postsLink.addEventListener('click', function(event) {
   const isPostsLinkSignedIn = postsLink.dataset.signedIn === 'true';
 
   if (!isPostsLinkSignedIn) {
-    alert('You need to sign up/in first to access Posts!'); // You can customize the message here
+    alert('You need to sign up/in first to access Posts!'); 
     event.preventDefault();
     window.location.href = '/login';
   }
@@ -42,7 +61,17 @@ chatsLink.addEventListener('click', function(event) {
   const isChatsLinkSignedIn = chatsLink.dataset.signedIn === 'true';
 
   if (!isChatsLinkSignedIn) {
-    alert('You need to sign up/in first to access Chats!'); // You can customize the message here
+    alert('You need to sign up/in first to access Chats!'); 
+    event.preventDefault();
+    window.location.href = '/login';
+  }
+});
+
+contactsLink.addEventListener('click', function(event) {
+  const isContactsLinkSignedIn = contactsLink.dataset.signedIn === 'true';
+
+  if (!isContactsLinkSignedIn) {
+    alert('You need to sign up/in first to access Contacts!'); 
     event.preventDefault();
     window.location.href = '/login';
   }

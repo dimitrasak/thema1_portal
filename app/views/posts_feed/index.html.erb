@@ -61,8 +61,20 @@
             
             <!--<%= link_to 'Create A New Post', posts_feed_create_path, id: 'posts-link'%>-->
             <button id="myButton" >Create A New Post</button>
-        
-
+            <br>
+            <div class="sort-options">
+                <label for="sortSelect">Sort by:</label>
+                <select id="sortSelect" onchange="sortPosts()">
+                    <option value="original">Original Order</option>
+                    <option value="category">Category</option>
+                    <option value="date">Date</option>
+                </select>
+            </div>
+            <div class="search-author">
+                <label for="authorSearch">Search by Author:</label>
+                <input type="text" id="authorSearch" placeholder="Enter author's name">
+                <button onclick="searchByAuthor()">Search</button>
+            </div>
         </div>
     
         <div class="posts" id="post_section">
@@ -76,7 +88,18 @@
                         <p><%= post.body %></p>
                     </div>
                     <div class="body-trunc">
-                    <p> Posted by: <em> <%= post.author%> </em></p>
+                        <p> Category of post: <strong><%= post.category%></strong> </p>
+                    </div>
+                    <div class="body-trunc">
+                        <p> Posted by: <em> <%= post.author%> </em></p>
+                    </div>
+                    <div class="body-trunc date" >
+                        <p>Created on: <%= post.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+                    </div>
+                    <div class="body-trunc">
+                        <% if current_user && (current_user.name == post.author || current_user.email == post.author) %>
+                            <%= link_to 'Delete Post', destroy_post_path(post.id), data: { confirm: 'Are you sure?' } %>
+                        <% end %>
                     </div>
                 </div>
             <% end %>
@@ -109,4 +132,64 @@
         document.getElementById("myButton").onclick = function () {
             location.href = "http://localhost:3000/posts_feed/create";
     };
+    var originalOrder = Array.from(document.getElementsByClassName("post-card"));
+
+    function sortPosts() {
+        var sortSelect = document.getElementById("sortSelect");
+        var sortBy = sortSelect.value;
+
+        // Get the post section container
+        var postSection = document.getElementById("post_section");
+
+        // Get all post cards
+        var postCards = postSection.getElementsByClassName("post-card");
+
+        // Convert HTMLCollection to Array for easier manipulation
+        var postArray = Array.from(postCards);
+
+        // Sort the posts based on the selected option
+        if (sortBy === "original") {
+            // Sort by the original order (do nothing, as posts are already in the original order)
+            postArray = originalOrder;
+        } else if (sortBy === "category") {
+            postArray.sort((a, b) => {
+                var categoryA = a.querySelector('.body-trunc strong').innerText.toLowerCase();
+                var categoryB = b.querySelector('.body-trunc strong').innerText.toLowerCase();
+                return categoryA.localeCompare(categoryB);
+            });
+        } else if (sortBy === "date") {
+            postArray.sort((a, b) => {
+                // Add your logic to extract and compare date information from posts
+                // For simplicity, assuming the date is in a specific format
+                var dateA = new Date(a.querySelector('.date').innerText);
+                var dateB = new Date(b.querySelector('.date').innerText);
+                return dateA - dateB;
+            });
+        }
+
+        // Remove existing posts from the container
+        while (postSection.firstChild) {
+            postSection.removeChild(postSection.firstChild);
+        }
+
+        // Append sorted posts back to the container
+        postArray.forEach((post) => {
+            postSection.appendChild(post);
+        });
+    }
+
+     function searchByAuthor() {
+        var authorSearchInput = document.getElementById("authorSearch");
+        var authorName = authorSearchInput.value.toLowerCase();
+
+        // Get all post cards
+        var postCards = document.getElementsByClassName("post-card");
+
+        // Iterate through each post card and show/hide based on author name
+        for (var i = 0; i < postCards.length; i++) {
+            var postAuthor = postCards[i].querySelector('.body-trunc em').innerText.toLowerCase();
+            var displayStyle = (postAuthor.includes(authorName)) ? 'flex' : 'none';
+            postCards[i].style.display = displayStyle;
+        }
+    }
     </script> 

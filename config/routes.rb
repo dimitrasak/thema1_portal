@@ -1,8 +1,22 @@
 Rails.application.routes.draw do
+  get 'notifications/index'
+  get 'rooms/index'
   get 'posts_feed/create'
   get 'posts_feed/store'
   get 'posts_feed/index'
   post 'posts_feed/store'
+  get 'posts_feed/destroy'
+  get '/posts_feed/destroy/:id', to: 'posts_feed#destroy', as: 'destroy_post'
+
+  resources :posts_feed do
+    
+  end
+
+  resources :contacts
+  
+  resources :rooms do
+    resources :messages
+  end
   get 'chats/create'
   get 'chats/new'
   get 'chats/show'
@@ -23,9 +37,10 @@ Rails.application.routes.draw do
     #get '/users/auth/:provider/passthru', to: 'user/omniauth_callbacks#passthru', as: :user_omniauth_passthru
     #get "/users/auth/google_oauth2" => "users/omniauth_callbacks#passthru"
 
-    
-    
   end
+  resources :users, only: [:show], path: 'profile'
+
+  resources :notifications, only: [:index]
 
   resources :posts do
     member do

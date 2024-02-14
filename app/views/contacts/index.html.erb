@@ -1,0 +1,45 @@
+
+<% if !flash[:notice].blank? %>
+  <div class="alert alert-info">
+  <%= flash[:notice] %>
+  </div>
+<% end %>
+
+<div>
+ <h4 class="text-right">
+    All Contacts <span class="badge"><%= current_user.contacts.count %></span>
+  </h4>
+<h4 class="text-left"><%= link_to "New Contact", new_contact_path, class: "fa fa-plus" %></h4></div>
+<br />
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th class="text-center">Full Name</th>      
+      <th class="text-center">Email</th>
+      <th class="text-center">Phone</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <% @contacts.each do |contact| %>
+      <tr>
+        <td class="text-justify" style="width: 15%"><%= contact.name %></td>        
+        <td class="text-justify" style="width: 20%"><%= contact.email %></td>
+        <td class="text-justify" style="width: 15%"><%= contact.phone %></td>
+        <td class="text-center" style="width: 30%">
+          <ul class="btn">
+             <li class="element"><%= link_to edit_contact_path(contact), class: "btn btn-circle btn-default btn-xs", title: "Edit" do %>
+              <i class="fa fa-edit" style="color:green"></i>
+            <% end %></li>
+            <li class="element"><%= button_to "Delete",  contact, method: :delete, class: "btn btn-danger", data: { confirm: "Are you sure that you wish to delete #{contact.name}?" } %></li>
+        </ul>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+  <div class="text-center">
+    <%= will_paginate @contacts %>
+  </div>
