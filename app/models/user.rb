@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :messages
   
   validates_uniqueness_of :name
+  
+  has_many :noticed_notifications, as: :recipient
   #after_create_commit { broadcast_append_to "users" }
   scope :all_except, ->(user) { where.not(id: user.id) }
 

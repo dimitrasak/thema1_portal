@@ -8,15 +8,17 @@
     <h3 style="color: #8e44ad;">Click on the service that you'd like to use!</h3>
     <h1 style="color: #e67e22;">See you on board!</h1>
     <%= link_to 'Go to Posts', posts_feed_index_path, class: 'btn btn-primary rounded-pill', id: 'posts-link', data: { signed_in: user_signed_in? } %>
-    <%= link_to 'Go to Chats', chats_path, class: 'btn btn-primary rounded-pill', id: 'chats-link', data: { signed_in: user_signed_in? } %>
+    <%= link_to 'Go to Messenger', rooms_path, class: 'btn btn-primary rounded-pill', id: 'chats-link', data: { signed_in: user_signed_in? } %>
     <%= link_to "Contact List", contacts_path, class: 'btn btn-primary rounded-pill', id: 'contacts-link', data: { signed_in: user_signed_in? } %>
     <div class="flex justify-between">
   <% if user_signed_in? %>
-    <div>
+    <!--<div>
       Signed in as <%= current_user.email %>. <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-blue-500" %>
       <%= link_to "All messages", rooms_path, class: "text-blue-500" %>
-    </div>
-    <!--<%= turbo_frame_tag "notifications", src: notifications_path %> -->
+    </div> -->
+    <br> <br>
+    <div> <strong> Notifications: </strong></div>
+    <%= turbo_frame_tag "notifications", src: notifications_path %> 
     <% if @notifications.present? %>
     <% @notifications.each do |notification| %>
       <%= render partial: 'notifications/notification', locals: { notification: notification } %>

@@ -86,4 +86,4 @@ group :development do
   # gem "spring"
 end
 
-gem "noticed", "~> 2.1"
+gem "noticed", "~> 2.0"
